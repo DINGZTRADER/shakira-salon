@@ -3,12 +3,6 @@
 -- =============================================================
 
 -- Drop old tables if they exist to prevent conflicts (clean recreate)
-DROP TRIGGER IF EXISTS trg_payments_updated ON public.payments;
-DROP TRIGGER IF EXISTS trg_appointments_updated ON public.appointments;
-DROP TRIGGER IF EXISTS trg_staff_updated ON public.staff;
-DROP TRIGGER IF EXISTS trg_services_updated ON public.services;
-DROP TRIGGER IF EXISTS trg_users_updated ON public.users;
-
 DROP TABLE IF EXISTS public.payments CASCADE;
 DROP TABLE IF EXISTS public.appointments CASCADE;
 DROP TABLE IF EXISTS public.staff CASCADE;
