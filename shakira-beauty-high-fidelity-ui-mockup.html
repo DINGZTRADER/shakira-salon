@@ -1,0 +1,1220 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Beauty Salon Booking Platform - Responsive UI Mockup</title>
+  <style>
+    :root {
+      --ink: #11100f;
+      --muted: #70665e;
+      --brown: #9b714c;
+      --tan: #c8aa86;
+      --sand: #f4eee7;
+      --paper: #fffaf5;
+      --white: #ffffff;
+      --line: #e3d6c8;
+      --ok: #337c57;
+      --warn: #b26b23;
+      --shadow: 0 24px 70px rgba(17, 16, 15, .16);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #181411;
+    }
+
+    .presentation {
+      min-height: 100vh;
+      padding: 36px;
+      background:
+        linear-gradient(135deg, rgba(200, 170, 134, .24), transparent 34%),
+        linear-gradient(180deg, #1d1814 0%, #0f0e0d 100%);
+    }
+
+    .cover {
+      max-width: 1400px;
+      margin: 0 auto 32px;
+      color: var(--white);
+      display: grid;
+      grid-template-columns: minmax(280px, 1fr) auto;
+      gap: 24px;
+      align-items: end;
+    }
+
+    .cover h1 {
+      margin: 0 0 10px;
+      font-size: clamp(30px, 4vw, 56px);
+      line-height: .96;
+      letter-spacing: 0;
+      font-weight: 780;
+    }
+
+    .cover p {
+      margin: 0;
+      max-width: 820px;
+      color: #e9ddd1;
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    .legend {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: end;
+    }
+
+    .tag {
+      border: 1px solid rgba(255, 250, 245, .18);
+      color: #fff7ef;
+      background: rgba(255, 250, 245, .08);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .section {
+      max-width: 1400px;
+      margin: 0 auto 46px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 18px;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: 0;
+    }
+
+    .section-title span {
+      color: #d8c7b6;
+      font-size: 13px;
+    }
+
+    .mock-row {
+      display: grid;
+      grid-template-columns: 375px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .phone {
+      width: 375px;
+      height: 812px;
+      overflow: hidden;
+      background: var(--paper);
+      border: 10px solid #050505;
+      border-radius: 40px;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      width: 96px;
+      height: 22px;
+      transform: translateX(-50%);
+      background: #050505;
+      border-radius: 0 0 18px 18px;
+      z-index: 4;
+    }
+
+    .desktop-shell {
+      width: 100%;
+      max-width: 1001px;
+      height: 626px;
+      overflow: hidden;
+      border: 10px solid #080706;
+      border-radius: 24px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .desktop {
+      width: 1440px;
+      height: 900px;
+      transform: scale(.695);
+      transform-origin: top left;
+      background: var(--paper);
+      overflow: hidden;
+    }
+
+    .mobile-screen {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background: var(--paper);
+    }
+
+    .m-top {
+      padding: 46px 20px 14px;
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .m-status {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--ink);
+      color: var(--white);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 13px;
+      flex: 0 0 auto;
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 16px;
+      line-height: 1.1;
+    }
+
+    .brand small {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 2px;
+    }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: var(--paper);
+      display: grid;
+      place-items: center;
+      position: relative;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .dot {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--brown);
+      border: 2px solid var(--paper);
+    }
+
+    .m-body {
+      flex: 1;
+      overflow: hidden;
+      padding: 18px 18px 12px;
+    }
+
+    .m-nav {
+      height: 72px;
+      border-top: 1px solid var(--line);
+      background: rgba(255, 250, 245, .98);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      align-items: center;
+      padding: 6px 10px 12px;
+    }
+
+    .nav-item {
+      display: grid;
+      place-items: center;
+      gap: 4px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 750;
+    }
+
+    .nav-item.active { color: var(--ink); }
+
+    .nav-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1px solid currentColor;
+      display: grid;
+      place-items: center;
+      font-size: 10px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      background: var(--white);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .pill.active {
+      color: var(--white);
+      background: var(--ink);
+      border-color: var(--ink);
+    }
+
+    .chip-row {
+      display: flex;
+      gap: 8px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .h1 {
+      font-size: 25px;
+      line-height: 1.08;
+      font-weight: 820;
+      margin: 0 0 14px;
+      letter-spacing: 0;
+    }
+
+    .h2 {
+      font-size: 15px;
+      font-weight: 820;
+      margin: 0 0 10px;
+    }
+
+    .subtle { color: var(--muted); }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 12px 28px rgba(17, 16, 15, .07);
+    }
+
+    .mobile-card { padding: 14px; margin-bottom: 12px; }
+
+    .calendar-strip {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .day {
+      min-height: 67px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--white);
+      display: grid;
+      place-items: center;
+      gap: 2px;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .day small {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 750;
+    }
+
+    .day.active {
+      background: var(--ink);
+      color: var(--white);
+      border-color: var(--ink);
+    }
+
+    .day.active small { color: #e8d8c5; }
+
+    .slot-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .slot {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      padding: 9px 6px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .slot.active {
+      background: var(--brown);
+      color: var(--white);
+      border-color: var(--brown);
+    }
+
+    .slot.disabled {
+      color: #b8aaa0;
+      background: #f7f1eb;
+      text-decoration: line-through;
+    }
+
+    .option {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .option:last-child { border-bottom: 0; }
+
+    .option strong { font-size: 13px; }
+    .option span { font-size: 12px; color: var(--muted); }
+
+    .toggle {
+      width: 42px;
+      height: 24px;
+      border-radius: 999px;
+      background: var(--ink);
+      position: relative;
+      flex: 0 0 auto;
+    }
+
+    .toggle::after {
+      content: "";
+      width: 18px;
+      height: 18px;
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      border-radius: 50%;
+      background: var(--white);
+    }
+
+    .cta {
+      border: 0;
+      border-radius: 8px;
+      background: var(--ink);
+      color: var(--white);
+      height: 48px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 830;
+    }
+
+    .secondary {
+      border: 1px solid var(--line);
+      background: var(--white);
+      color: var(--ink);
+    }
+
+    .alert-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: #efe4d7;
+      color: #4b3424;
+      font-size: 12px;
+      font-weight: 760;
+      margin-bottom: 12px;
+    }
+
+    .stylist-card {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+      align-items: center;
+    }
+
+    .photo {
+      border-radius: 8px;
+      min-height: 72px;
+      background:
+        radial-gradient(circle at 56% 30%, rgba(255,255,255,.78) 0 10%, transparent 11%),
+        linear-gradient(135deg, #3b2720, #c7a07b 48%, #f7eee4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .photo::after {
+      content: "";
+      position: absolute;
+      inset: auto 8px 8px;
+      height: 42%;
+      border-radius: 999px 999px 6px 6px;
+      background: rgba(17, 16, 15, .58);
+    }
+
+    .photo.alt { background: linear-gradient(135deg, #11100f, #9b714c 42%, #f2dfc9); }
+    .photo.third { background: linear-gradient(135deg, #f3e7dc, #b9855c 45%, #25201d); }
+
+    .availability {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--ok);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .availability::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      background: var(--ok);
+      border-radius: 50%;
+    }
+
+    .portfolio {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+      margin-top: 8px;
+    }
+
+    .tile {
+      height: 42px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, #e6d2bf, #3f3028);
+    }
+
+    .tile:nth-child(2) { background: linear-gradient(135deg, #141211, #c8aa86); }
+    .tile:nth-child(3) { background: linear-gradient(135deg, #fff7ef, #90623f); }
+
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 13px;
+    }
+
+    .price-row.total {
+      border-bottom: 0;
+      font-size: 18px;
+      font-weight: 850;
+      color: var(--ink);
+    }
+
+    .pay-method {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      background: var(--white);
+      font-size: 13px;
+      font-weight: 760;
+    }
+
+    .pay-method.active {
+      border-color: var(--ink);
+      box-shadow: inset 0 0 0 1px var(--ink);
+    }
+
+    .pay-logo {
+      width: 38px;
+      height: 28px;
+      border-radius: 6px;
+      background: var(--ink);
+      color: var(--white);
+      display: grid;
+      place-items: center;
+      font-size: 10px;
+      font-weight: 850;
+    }
+
+    .stars {
+      display: flex;
+      gap: 8px;
+      color: var(--brown);
+      font-size: 30px;
+      letter-spacing: 0;
+      margin: 8px 0 14px;
+    }
+
+    .comment-box {
+      min-height: 118px;
+      border: 1px solid var(--line);
+      background: var(--white);
+      border-radius: 8px;
+      padding: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .rebook-panel {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px;
+      background: var(--ink);
+      color: var(--white);
+      border-radius: 8px;
+      margin: 12px 0;
+    }
+
+    .rebook-panel small { color: #d8c7b6; }
+
+    .app-grid {
+      display: grid;
+      grid-template-columns: 236px 1fr;
+      height: 100%;
+    }
+
+    .sidebar {
+      background: var(--ink);
+      color: var(--white);
+      padding: 34px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 26px;
+    }
+
+    .side-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .side-brand .mark {
+      background: var(--tan);
+      color: var(--ink);
+    }
+
+    .side-brand strong {
+      display: block;
+      font-size: 18px;
+    }
+
+    .side-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 42px;
+      border-radius: 8px;
+      padding: 0 12px;
+      color: #dacdbc;
+      font-weight: 760;
+      font-size: 14px;
+    }
+
+    .side-link.active {
+      background: rgba(255, 255, 255, .11);
+      color: var(--white);
+    }
+
+    .badge {
+      min-width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background: var(--tan);
+      color: var(--ink);
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      font-weight: 850;
+      padding: 0 7px;
+    }
+
+    .main {
+      padding: 32px;
+      overflow: hidden;
+    }
+
+    .desktop-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 28px;
+      margin-bottom: 26px;
+    }
+
+    .desktop-head h3 {
+      margin: 0 0 6px;
+      font-size: 34px;
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .desktop-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .search-bar {
+      width: 420px;
+      min-height: 48px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 14px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1.18fr .82fr;
+      gap: 22px;
+    }
+
+    .desktop-card {
+      padding: 20px;
+    }
+
+    .month-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+    }
+
+    .month-day {
+      min-height: 70px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px;
+      background: var(--white);
+      font-weight: 820;
+      font-size: 14px;
+    }
+
+    .month-day small {
+      display: block;
+      color: var(--muted);
+      margin-top: 12px;
+      font-size: 11px;
+      font-weight: 760;
+    }
+
+    .month-day.active {
+      background: var(--ink);
+      color: var(--white);
+      border-color: var(--ink);
+    }
+
+    .month-day.active small { color: #e6d9ca; }
+
+    .service-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .service-row:last-child { border-bottom: 0; }
+
+    .service-row strong { display: block; font-size: 15px; }
+    .service-row span { color: var(--muted); font-size: 13px; }
+
+    .desktop-stylists {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .desktop-stylists .stylist-card {
+      grid-template-columns: 1fr;
+      padding: 14px;
+      margin: 0;
+    }
+
+    .desktop-stylists .photo {
+      min-height: 190px;
+    }
+
+    .checkout-layout {
+      display: grid;
+      grid-template-columns: 1fr 430px;
+      gap: 22px;
+    }
+
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .review-layout {
+      display: grid;
+      grid-template-columns: 1fr 390px;
+      gap: 22px;
+    }
+
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .history-item:last-child { border-bottom: 0; }
+
+    .mini-btn {
+      border: 1px solid var(--line);
+      background: var(--white);
+      border-radius: 8px;
+      height: 34px;
+      padding: 0 12px;
+      font-weight: 800;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .timeline div {
+      display: grid;
+      grid-template-columns: 78px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: var(--white);
+    }
+
+    .screen-note {
+      position: absolute;
+      left: 14px;
+      bottom: 82px;
+      right: 14px;
+      border: 1px solid rgba(155, 113, 76, .25);
+      background: rgba(244, 238, 231, .92);
+      border-radius: 8px;
+      padding: 9px 10px;
+      color: #553a27;
+      font-size: 11px;
+      line-height: 1.35;
+      font-weight: 720;
+    }
+
+    @media (max-width: 980px) {
+      .presentation { padding: 20px 12px; }
+      .cover {
+        grid-template-columns: 1fr;
+      }
+      .legend { justify-content: start; }
+      .mock-row {
+        grid-template-columns: 1fr;
+        justify-items: center;
+      }
+      .section-title {
+        display: block;
+      }
+      .section-title span {
+        display: block;
+        margin-top: 6px;
+      }
+      .desktop-shell {
+        width: min(100%, 375px);
+        height: 235px;
+        border-width: 6px;
+        border-radius: 16px;
+      }
+      .desktop {
+        transform: scale(.252);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="presentation">
+    <header class="cover">
+      <div>
+        <h1>Shakira Beauty and Welness Salon Booking Platform</h1>
+        <p>Responsive mobile app and desktop dashboard mockup set for a Uganda-based salon: appointment scheduling, stylist discovery, UGX checkout, reviews, booking history, rescheduling, live availability, and in-app messaging.</p>
+      </div>
+      <div class="legend">
+        <span class="tag">Mobile 375x812</span>
+        <span class="tag">Desktop 1440x900</span>
+        <span class="tag">Light brown / black / white</span>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="section-title">
+        <h2>1. Appointment Calendar Screen</h2>
+        <span>Date and time selection with service customization, live availability, booking history, and rescheduling entry points.</span>
+      </div>
+      <div class="mock-row">
+        <article class="phone">
+          <div class="mobile-screen">
+            <div class="m-top">
+              <div class="m-status"><span>9:41</span><span>5G 100%</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                <div class="brand"><span class="mark">SB</span><span><strong>Book visit</strong><small>Kampala: braids + hair dye</small></span></div>
+                <div class="icon-btn">M<span class="dot"></span></div>
+              </div>
+            </div>
+            <div class="m-body">
+              <div class="alert-line"><span>3 stylists just opened 4:30 PM</span><strong>Live</strong></div>
+              <h2 class="h1">Choose your appointment</h2>
+              <div class="chip-row">
+                <span class="pill active">Braids</span><span class="pill">Dreadlocks</span><span class="pill">Perm</span><span class="pill">Hair dye</span>
+              </div>
+              <div class="calendar-strip">
+                <div class="day"><small>Mon</small>18</div>
+                <div class="day"><small>Tue</small>19</div>
+                <div class="day active"><small>Wed</small>20</div>
+                <div class="day"><small>Thu</small>21</div>
+                <div class="day"><small>Fri</small>22</div>
+              </div>
+              <div class="slot-grid">
+                <div class="slot">9:30</div><div class="slot disabled">11:00</div><div class="slot">1:15</div>
+                <div class="slot active">4:30</div><div class="slot">5:15</div><div class="slot">6:00</div>
+              </div>
+              <div class="card mobile-card">
+                <h3 class="h2">Customize service</h3>
+                <div class="option"><span><strong>Hair dye gloss</strong><br><span>+25 min, richer finish</span></span><div class="toggle"></div></div>
+                <div class="option"><span><strong>Dreadlock maintenance</strong><br><span>Retwist and scalp care</span></span><strong>UGX 28,000</strong></div>
+                <div class="option"><span><strong>Perm finish</strong><br><span>Curl shaping and set</span></span><strong>UGX 35,000</strong></div>
+                <div class="option"><span><strong>Quiet chair</strong><br><span>Low conversation preference</span></span><span class="pill active">On</span></div>
+              </div>
+              <button class="cta">Continue to stylist</button>
+              <div class="screen-note">History and rescheduling remain one tap away in the bottom navigation during the whole flow.</div>
+            </div>
+            <nav class="m-nav">
+              <div class="nav-item active"><span class="nav-icon">B</span><span>Book</span></div>
+              <div class="nav-item"><span class="nav-icon">H</span><span>History</span></div>
+              <div class="nav-item"><span class="nav-icon">R</span><span>Resched</span></div>
+              <div class="nav-item"><span class="nav-icon">C</span><span>Chat</span></div>
+            </nav>
+          </div>
+        </article>
+
+        <article class="desktop-shell">
+          <div class="desktop">
+            <div class="app-grid">
+              <aside class="sidebar">
+                <div class="side-brand"><span class="mark">SB</span><span><strong>Shakira Beauty and Welness Salon</strong><small>Premium bookings</small></span></div>
+                <div>
+                  <div class="side-link active"><span>Calendar</span><span class="badge">3</span></div>
+                  <div class="side-link"><span>Stylists</span></div>
+                  <div class="side-link"><span>Checkout</span></div>
+                  <div class="side-link"><span>History</span><span class="badge">2</span></div>
+                  <div class="side-link"><span>Reschedule</span></div>
+                  <div class="side-link"><span>Messages</span><span class="badge">1</span></div>
+                </div>
+              </aside>
+              <section class="main">
+                <div class="desktop-head">
+                  <div><h3>Appointment calendar</h3><p>Live openings update as stylists confirm their chairs at the Kampala salon.</p></div>
+                  <div class="search-bar"><span>Search service, stylist, or date</span><strong>Search</strong></div>
+                </div>
+                <div class="content-grid">
+                  <div class="card desktop-card">
+                    <h3 class="h2">June availability</h3>
+                    <div class="month-grid">
+                      <div class="month-day">17<small>2 open</small></div><div class="month-day">18<small>5 open</small></div><div class="month-day">19<small>4 open</small></div><div class="month-day active">20<small>4:30 held</small></div><div class="month-day">21<small>7 open</small></div><div class="month-day">22<small>3 open</small></div><div class="month-day">23<small>6 open</small></div>
+                      <div class="month-day">24<small>Waitlist</small></div><div class="month-day">25<small>5 open</small></div><div class="month-day">26<small>2 open</small></div><div class="month-day">27<small>8 open</small></div><div class="month-day">28<small>4 open</small></div><div class="month-day">29<small>1 open</small></div><div class="month-day">30<small>6 open</small></div>
+                    </div>
+                  </div>
+                  <div class="card desktop-card">
+                    <h3 class="h2">Service customization</h3>
+                    <div class="service-row"><span><strong>Braids installation</strong><span>2 hr 15 min</span></span><strong>UGX 185,000</strong></div>
+                    <div class="service-row"><span><strong>Hair dye gloss</strong><span>Selected, +25 min</span></span><span class="pill active">On</span></div>
+                    <div class="service-row"><span><strong>Dreadlock maintenance</strong><span>Retwist and scalp care</span></span><strong>UGX 28,000</strong></div>
+                    <div class="service-row"><span><strong>Perm finish</strong><span>Curl shaping and set</span></span><strong>UGX 35,000</strong></div>
+                    <div class="service-row"><span><strong>Quiet chair</strong><span>Saved preference</span></span><span class="pill active">On</span></div>
+                    <div class="alert-line" style="margin-top:16px;"><span>4:30 PM is held for 09:58</span><strong>Live</strong></div>
+                    <button class="cta">Continue to stylist selection</button>
+                  </div>
+                </div>
+                <div class="timeline">
+                  <div><strong>History</strong><span class="subtle">Last braids and hair dye with Amara, May 12</span><button class="mini-btn">Rebook</button></div>
+                  <div><strong>Reschedule</strong><span class="subtle">Upcoming wash and set, Jun 24 at 10:00</span><button class="mini-btn">Move time</button></div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <h2>2. Stylist Profile Cards</h2>
+        <span>Expertise, ratings, portfolio photos, availability indicators, and messaging state across breakpoints.</span>
+      </div>
+      <div class="mock-row">
+        <article class="phone">
+          <div class="mobile-screen">
+            <div class="m-top">
+              <div class="m-status"><span>9:41</span><span>5G 100%</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                <div class="brand"><span class="mark">SB</span><span><strong>Select stylist</strong><small>4:30 PM, Jun 20</small></span></div>
+                <div class="icon-btn">C<span class="dot"></span></div>
+              </div>
+            </div>
+            <div class="m-body">
+              <h2 class="h1">Match with the right expert</h2>
+              <div class="chip-row"><span class="pill active">Braids</span><span class="pill">Dreadlocks</span><span class="pill">Perm</span><span class="pill">Hair dye</span></div>
+              <div class="card stylist-card">
+                <div class="photo"></div>
+                <div><strong>Amara Wells</strong><br><span class="subtle">Braids, hair dye, color gloss</span><br><span class="availability">Available 4:30</span><div class="portfolio"><div class="tile"></div><div class="tile"></div><div class="tile"></div></div></div>
+              </div>
+              <div class="card stylist-card">
+                <div class="photo alt"></div>
+                <div><strong>Noelle Carter</strong><br><span class="subtle">Perms, cuts, texture shaping</span><br><span class="availability">Available 5:15</span><div class="portfolio"><div class="tile"></div><div class="tile"></div><div class="tile"></div></div></div>
+              </div>
+              <div class="card stylist-card">
+                <div class="photo third"></div>
+                <div><strong>Jules Marin</strong><br><span class="subtle">Dreadlocks, loc repair, updos</span><br><span style="color:var(--warn);font-size:11px;font-weight:800;">Waitlist today</span><div class="portfolio"><div class="tile"></div><div class="tile"></div><div class="tile"></div></div></div>
+              </div>
+              <button class="cta">Book Amara</button>
+              <button class="cta secondary" style="margin-top:8px;">Message stylist</button>
+            </div>
+            <nav class="m-nav">
+              <div class="nav-item"><span class="nav-icon">B</span><span>Book</span></div>
+              <div class="nav-item"><span class="nav-icon">H</span><span>History</span></div>
+              <div class="nav-item"><span class="nav-icon">R</span><span>Resched</span></div>
+              <div class="nav-item active"><span class="nav-icon">C</span><span>Chat</span></div>
+            </nav>
+          </div>
+        </article>
+        <article class="desktop-shell">
+          <div class="desktop">
+            <div class="app-grid">
+              <aside class="sidebar">
+                <div class="side-brand"><span class="mark">SB</span><span><strong>Shakira Beauty and Welness Salon</strong><small>Premium bookings</small></span></div>
+                <div>
+                  <div class="side-link"><span>Calendar</span></div><div class="side-link active"><span>Stylists</span><span class="badge">Live</span></div><div class="side-link"><span>History</span></div><div class="side-link"><span>Reschedule</span></div><div class="side-link"><span>Messages</span><span class="badge">1</span></div>
+                </div>
+              </aside>
+              <section class="main">
+                <div class="desktop-head">
+                  <div><h3>Stylist profiles</h3><p>Compare expertise, portfolio work, ratings, and real-time chair status.</p></div>
+                  <div class="search-bar"><span>Filter: braids, dreadlocks, perm, hair dye</span><strong>Search</strong></div>
+                </div>
+                <div class="desktop-stylists">
+                  <div class="card stylist-card"><div class="photo"></div><div><strong>Amara Wells</strong><p class="subtle">Braids, protective styling, and hair dye gloss. 4.98 rating from 312 reviews.</p><span class="availability">Available 4:30 PM</span><div class="portfolio"><div class="tile"></div><div class="tile"></div><div class="tile"></div></div><button class="cta" style="margin-top:14px;">Select Amara</button></div></div>
+                  <div class="card stylist-card"><div class="photo alt"></div><div><strong>Noelle Carter</strong><p class="subtle">Perms, precision cuts, texture shaping, restorative styling. 4.91 rating.</p><span class="availability">Available 5:15 PM</span><div class="portfolio"><div class="tile"></div><div class="tile"></div><div class="tile"></div></div><button class="cta secondary" style="margin-top:14px;">Message</button></div></div>
+                  <div class="card stylist-card"><div class="photo third"></div><div><strong>Jules Marin</strong><p class="subtle">Dreadlocks, loc repair, bridal styling, and updos. 4.96 rating.</p><span style="color:var(--warn);font-size:13px;font-weight:800;">Waitlist today</span><div class="portfolio"><div class="tile"></div><div class="tile"></div><div class="tile"></div></div><button class="cta secondary" style="margin-top:14px;">Join waitlist</button></div></div>
+                </div>
+                <div class="timeline">
+                  <div><strong>Booking history</strong><span class="subtle">Amara completed your last color refresh</span><button class="mini-btn">View notes</button></div>
+                  <div><strong>In-app message</strong><span class="subtle">Noelle sent a prep question for your consultation</span><button class="mini-btn">Reply</button></div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <h2>3. Payment Checkout Flow</h2>
+        <span>Pricing breakdown, multiple payment options, deposit messaging, and editable booking details.</span>
+      </div>
+      <div class="mock-row">
+        <article class="phone">
+          <div class="mobile-screen">
+            <div class="m-top">
+              <div class="m-status"><span>9:41</span><span>5G 100%</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                <div class="brand"><span class="mark">SB</span><span><strong>Checkout</strong><small>Secure deposit</small></span></div>
+                <div class="icon-btn">H</div>
+              </div>
+            </div>
+            <div class="m-body">
+              <h2 class="h1">Confirm and pay in UGX</h2>
+              <div class="card mobile-card">
+                <div class="price-row"><span>Braids installation</span><strong>UGX 185,000</strong></div>
+                <div class="price-row"><span>Hair dye gloss</span><strong>UGX 35,000</strong></div>
+                <div class="price-row"><span>Dreadlock maintenance</span><strong>UGX 28,000</strong></div>
+                <div class="price-row"><span>Deposit due today</span><strong>UGX 62,000</strong></div>
+                <div class="price-row total"><span>Visit total</span><span>UGX 248,000</span></div>
+              </div>
+              <h3 class="h2">Payment method</h3>
+              <div class="pay-method active"><span class="pay-logo">MTN</span><span>MTN Mobile Money</span></div>
+              <div class="pay-method"><span class="pay-logo">AIRTEL</span><span>Airtel Money</span></div>
+              <div class="pay-method"><span class="pay-logo">CASH</span><span>Pay balance at salon</span></div>
+              <div class="alert-line"><span>Free reschedule until Jun 19, 6:00 PM</span><strong>Edit</strong></div>
+              <button class="cta">Pay UGX deposit and book</button>
+            </div>
+            <nav class="m-nav">
+              <div class="nav-item active"><span class="nav-icon">B</span><span>Book</span></div>
+              <div class="nav-item"><span class="nav-icon">H</span><span>History</span></div>
+              <div class="nav-item"><span class="nav-icon">R</span><span>Resched</span></div>
+              <div class="nav-item"><span class="nav-icon">C</span><span>Chat</span></div>
+            </nav>
+          </div>
+        </article>
+        <article class="desktop-shell">
+          <div class="desktop">
+            <div class="app-grid">
+              <aside class="sidebar">
+                <div class="side-brand"><span class="mark">SB</span><span><strong>Shakira Beauty and Welness Salon</strong><small>Premium bookings</small></span></div>
+                <div>
+                  <div class="side-link"><span>Calendar</span></div><div class="side-link"><span>Stylists</span></div><div class="side-link active"><span>Checkout</span></div><div class="side-link"><span>History</span></div><div class="side-link"><span>Messages</span><span class="badge">1</span></div>
+                </div>
+              </aside>
+              <section class="main">
+                <div class="desktop-head">
+                  <div><h3>Payment checkout</h3><p>Confirm appointment details, UGX payment method, and Kampala salon rescheduling terms.</p></div>
+                  <button class="cta secondary" style="width:170px;">Edit booking</button>
+                </div>
+                <div class="checkout-layout">
+                  <div class="card desktop-card">
+                    <h3 class="h2">Choose Uganda payment method</h3>
+                    <div class="method-grid">
+                      <div class="pay-method active"><span class="pay-logo">MTN</span><span>MTN Mobile Money</span></div>
+                      <div class="pay-method"><span class="pay-logo">AIRTEL</span><span>Airtel Money</span></div>
+                      <div class="pay-method"><span class="pay-logo">BANK</span><span>Uganda bank transfer</span></div>
+                      <div class="pay-method"><span class="pay-logo">CASH</span><span>Pay balance at salon</span></div>
+                    </div>
+                    <div class="timeline">
+                      <div><strong>Reschedule window</strong><span class="subtle">Free movement until Jun 19 at 6:00 PM</span><button class="mini-btn">Policy</button></div>
+                      <div><strong>Messages</strong><span class="subtle">Amara confirmed your braid length and hair dye notes</span><button class="mini-btn">Open</button></div>
+                    </div>
+                  </div>
+                  <div class="card desktop-card">
+                    <h3 class="h2">Order summary</h3>
+                    <div class="price-row"><span>Braids installation</span><strong>UGX 185,000</strong></div>
+                    <div class="price-row"><span>Hair dye gloss</span><strong>UGX 35,000</strong></div>
+                    <div class="price-row"><span>Dreadlock maintenance</span><strong>UGX 28,000</strong></div>
+                    <div class="price-row"><span>Deposit due today</span><strong>UGX 62,000</strong></div>
+                    <div class="price-row total"><span>Visit total</span><span>UGX 248,000</span></div>
+                    <button class="cta" style="margin-top:14px;">Pay UGX deposit and book</button>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <h2>4. Post-Appointment Review Screen</h2>
+        <span>Star ratings, comment field, rebook option, stylist follow-up, and history/rescheduling continuity.</span>
+      </div>
+      <div class="mock-row">
+        <article class="phone">
+          <div class="mobile-screen">
+            <div class="m-top">
+              <div class="m-status"><span>9:41</span><span>5G 100%</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                <div class="brand"><span class="mark">SB</span><span><strong>Review visit</strong><small>Completed today</small></span></div>
+                <div class="icon-btn">C<span class="dot"></span></div>
+              </div>
+            </div>
+            <div class="m-body">
+              <h2 class="h1">How did your appointment feel?</h2>
+              <div class="card mobile-card">
+                <div class="stylist-card" style="grid-template-columns:60px 1fr;padding:0;margin:0 0 10px;border:0;box-shadow:none;">
+                  <div class="photo" style="min-height:60px;"></div>
+                  <div><strong>Amara Wells</strong><br><span class="subtle">Braids and hair dye, Jun 20</span></div>
+                </div>
+                <div class="stars">*****</div>
+                <div class="comment-box">Loved the braid finish and dye tone. Add a prompt here for product feedback, service comfort, and photo permission.</div>
+              </div>
+              <div class="rebook-panel"><span><strong>Keep your color fresh</strong><br><small>Suggested rebook in 8 weeks</small></span><button class="mini-btn">Rebook</button></div>
+              <button class="cta">Submit review</button>
+              <button class="cta secondary" style="margin-top:8px;">View booking history</button>
+            </div>
+            <nav class="m-nav">
+              <div class="nav-item"><span class="nav-icon">B</span><span>Book</span></div>
+              <div class="nav-item active"><span class="nav-icon">H</span><span>History</span></div>
+              <div class="nav-item"><span class="nav-icon">R</span><span>Resched</span></div>
+              <div class="nav-item"><span class="nav-icon">C</span><span>Chat</span></div>
+            </nav>
+          </div>
+        </article>
+        <article class="desktop-shell">
+          <div class="desktop">
+            <div class="app-grid">
+              <aside class="sidebar">
+                <div class="side-brand"><span class="mark">SB</span><span><strong>Shakira Beauty and Welness Salon</strong><small>Premium bookings</small></span></div>
+                <div>
+                  <div class="side-link"><span>Calendar</span></div><div class="side-link"><span>Stylists</span></div><div class="side-link active"><span>Reviews</span></div><div class="side-link"><span>History</span><span class="badge">6</span></div><div class="side-link"><span>Reschedule</span></div><div class="side-link"><span>Messages</span><span class="badge">1</span></div>
+                </div>
+              </aside>
+              <section class="main">
+                <div class="desktop-head">
+                  <div><h3>Post-appointment review</h3><p>Capture service quality, rebook intent, and stylist follow-up in one focused state.</p></div>
+                  <div class="search-bar"><span>Amara sent aftercare instructions</span><strong>1</strong></div>
+                </div>
+                <div class="review-layout">
+                  <div class="card desktop-card">
+                    <h3 class="h2">Rate your visit</h3>
+                    <div class="stylist-card" style="grid-template-columns:92px 1fr;padding:0;margin-bottom:16px;border:0;box-shadow:none;">
+                      <div class="photo" style="min-height:92px;"></div>
+                      <div><strong>Amara Wells</strong><p class="subtle">Braids installation, hair dye gloss, dreadlock maintenance. Completed Jun 20 at 6:45 PM.</p><span class="availability">Follow-up available</span></div>
+                    </div>
+                    <div class="stars">*****</div>
+                    <div class="comment-box">Loved the braid finish and dye tone. The review field supports detailed service feedback, comfort notes, and portfolio photo permission.</div>
+                    <button class="cta" style="margin-top:16px;">Submit review</button>
+                  </div>
+                  <div class="card desktop-card">
+                    <h3 class="h2">Next best action</h3>
+                    <div class="rebook-panel"><span><strong>Rebook color care</strong><br><small>Recommended Aug 15-22</small></span><button class="mini-btn">Rebook</button></div>
+                    <div class="history-item"><span><strong>Booking history</strong><br><span class="subtle">6 completed appointments</span></span><button class="mini-btn">Open</button></div>
+                    <div class="history-item"><span><strong>Reschedule upcoming</strong><br><span class="subtle">Wash and set, Jun 24</span></span><button class="mini-btn">Move</button></div>
+                    <div class="history-item"><span><strong>Message stylist</strong><br><span class="subtle">Aftercare notes unread</span></span><button class="mini-btn">Reply</button></div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

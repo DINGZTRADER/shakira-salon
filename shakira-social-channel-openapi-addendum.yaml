@@ -1,0 +1,413 @@
+openapi: 3.1.0
+info:
+  title: Shakira Beauty Social Channel API Addendum
+  version: 1.0.0
+  summary: WhatsApp + Instagram endpoints layered on top of the core booking API.
+servers:
+  - url: https://api.shakirabeauty.example.com/v1
+security:
+  - bearerAuth: []
+tags:
+  - name: Social Accounts
+  - name: Social Leads
+  - name: Conversations
+  - name: Webhooks
+  - name: Templates
+
+paths:
+  /social/accounts:
+    get:
+      tags: [Social Accounts]
+      summary: List connected WhatsApp and Instagram accounts
+      responses:
+        '200':
+          description: Connected accounts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SocialAccount'
+
+  /social/leads:
+    get:
+      tags: [Social Leads]
+      summary: List Instagram and WhatsApp leads
+      parameters:
+        - name: channel
+          in: query
+          schema:
+            $ref: '#/components/schemas/SocialChannel'
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [new, qualified, whatsapp_opened, hold_created, booked, lost]
+      responses:
+        '200':
+          description: Lead list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SocialLead'
+
+  /social/conversations:
+    get:
+      tags: [Conversations]
+      summary: List social conversations for staff inbox
+      parameters:
+        - name: channel
+          in: query
+          schema:
+            $ref: '#/components/schemas/SocialChannel'
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [open, bot_active, staff_active, booked, closed, spam]
+      responses:
+        '200':
+          description: Conversation list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SocialConversation'
+
+  /social/conversations/{conversationId}/messages:
+    get:
+      tags: [Conversations]
+      summary: List social messages
+      parameters:
+        - $ref: '#/components/parameters/ConversationId'
+      responses:
+        '200':
+          description: Messages
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SocialMessage'
+    post:
+      tags: [Conversations]
+      summary: Send WhatsApp or Instagram message
+      parameters:
+        - $ref: '#/components/parameters/ConversationId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [body]
+              properties:
+                body:
+                  type: string
+                  minLength: 1
+                templateName:
+                  type: string
+                templateVariables:
+                  type: object
+                  additionalProperties: true
+      responses:
+        '201':
+          description: Message queued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SocialMessage'
+
+  /social/conversations/{conversationId}/booking-session:
+    post:
+      tags: [Conversations]
+      summary: Start or continue WhatsApp booking bot state
+      parameters:
+        - $ref: '#/components/parameters/ConversationId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                selectedServiceIds:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                requestedStartsAt:
+                  type: string
+                  format: date-time
+                stylistId:
+                  type: string
+                  format: uuid
+                paymentProvider:
+                  type: string
+                  enum: [mtn_mobile_money, airtel_money, bank_transfer, cash_at_salon]
+      responses:
+        '200':
+          description: Updated booking state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BotBookingState'
+
+  /social/conversations/{conversationId}/handoff:
+    post:
+      tags: [Conversations]
+      summary: Assign conversation from bot to staff
+      parameters:
+        - $ref: '#/components/parameters/ConversationId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [assignedUserId]
+              properties:
+                assignedUserId:
+                  type: string
+                  format: uuid
+      responses:
+        '200':
+          description: Conversation assigned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SocialConversation'
+
+  /social/templates:
+    get:
+      tags: [Templates]
+      summary: List WhatsApp templates
+      responses:
+        '200':
+          description: Templates
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WhatsAppTemplate'
+
+  /webhooks/whatsapp:
+    post:
+      tags: [Webhooks]
+      security: []
+      summary: Receive WhatsApp webhook events
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '204':
+          description: Accepted
+
+  /webhooks/instagram:
+    post:
+      tags: [Webhooks]
+      security: []
+      summary: Receive Instagram webhook events
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '204':
+          description: Accepted
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    ConversationId:
+      name: conversationId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+  schemas:
+    SocialChannel:
+      type: string
+      enum: [whatsapp, instagram]
+
+    SocialAccount:
+      type: object
+      required: [id, channel, displayName, handle, isActive]
+      properties:
+        id:
+          type: string
+          format: uuid
+        channel:
+          $ref: '#/components/schemas/SocialChannel'
+        displayName:
+          type: string
+          example: Shakira Beauty
+        handle:
+          type: string
+          example: shakirabeauty_ug
+        isActive:
+          type: boolean
+
+    SocialLead:
+      type: object
+      required: [id, channel, status, source, firstSeenAt, lastSeenAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        channel:
+          $ref: '#/components/schemas/SocialChannel'
+        status:
+          type: string
+          enum: [new, qualified, whatsapp_opened, hold_created, booked, lost]
+        source:
+          type: string
+          example: instagram_story_reply
+        serviceInterest:
+          type: string
+          example: Braids installation
+        firstSeenAt:
+          type: string
+          format: date-time
+        lastSeenAt:
+          type: string
+          format: date-time
+
+    SocialConversation:
+      type: object
+      required: [id, channel, status, externalThreadId]
+      properties:
+        id:
+          type: string
+          format: uuid
+        channel:
+          $ref: '#/components/schemas/SocialChannel'
+        status:
+          type: string
+          enum: [open, bot_active, staff_active, booked, closed, spam]
+        externalThreadId:
+          type: string
+        customerId:
+          type: string
+          format: uuid
+        appointmentId:
+          type: string
+          format: uuid
+        assignedUserId:
+          type: string
+          format: uuid
+        lastMessageAt:
+          type: string
+          format: date-time
+
+    SocialMessage:
+      type: object
+      required: [id, conversationId, direction, createdAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        conversationId:
+          type: string
+          format: uuid
+        direction:
+          type: string
+          enum: [inbound, outbound]
+        body:
+          type: string
+        mediaUrls:
+          type: array
+          items:
+            type: string
+            format: uri
+        deliveredAt:
+          type: string
+          format: date-time
+        readAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+
+    BotBookingState:
+      type: object
+      required: [conversationId, step]
+      properties:
+        conversationId:
+          type: string
+          format: uuid
+        step:
+          type: string
+          enum: [choose_service, choose_time, choose_stylist, quote, payment, confirmed]
+        quote:
+          type: object
+          properties:
+            currency:
+              type: string
+              const: UGX
+            totalUgx:
+              type: integer
+              example: 220000
+            depositDueUgx:
+              type: integer
+              example: 62000
+        holdId:
+          type: string
+          format: uuid
+        appointmentId:
+          type: string
+          format: uuid
+
+    WhatsAppTemplate:
+      type: object
+      required: [id, kind, templateName, locale, body, isActive]
+      properties:
+        id:
+          type: string
+          format: uuid
+        kind:
+          type: string
+          enum: [booking_confirmation, payment_prompt, appointment_reminder, review_request, rebook_prompt, marketing_broadcast]
+        templateName:
+          type: string
+        locale:
+          type: string
+          example: en
+        body:
+          type: string
+        isActive:
+          type: boolean

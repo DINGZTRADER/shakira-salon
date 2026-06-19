@@ -1,0 +1,1071 @@
+openapi: 3.1.0
+info:
+  title: Shakira Beauty and Welness Salon Booking API
+  version: 1.0.0
+  summary: Uganda-centric salon booking API for mobile and desktop clients.
+  description: >
+    REST API specification for appointment scheduling, stylist discovery,
+    UGX checkout, Mobile Money payments, rescheduling, reviews, and messaging.
+servers:
+  - url: https://api.shakirabeauty.example.com/v1
+    description: Production
+  - url: https://staging-api.shakirabeauty.example.com/v1
+    description: Staging
+security:
+  - bearerAuth: []
+tags:
+  - name: Services
+  - name: Stylists
+  - name: Availability
+  - name: Booking
+  - name: Payments
+  - name: Appointments
+  - name: Reviews
+  - name: Messages
+  - name: Customers
+
+paths:
+  /services:
+    get:
+      tags: [Services]
+      summary: List active salon services and add-ons
+      parameters:
+        - $ref: '#/components/parameters/BranchId'
+        - name: category
+          in: query
+          schema:
+            type: string
+            enum: [Braids, Dreadlocks, Perm, Hair dye]
+      responses:
+        '200':
+          description: Active services
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Service'
+                required: [data]
+
+  /stylists:
+    get:
+      tags: [Stylists]
+      summary: List stylists with expertise, ratings, portfolio, and availability
+      parameters:
+        - $ref: '#/components/parameters/BranchId'
+        - name: serviceIds
+          in: query
+          description: Comma-separated service IDs.
+          schema:
+            type: string
+        - name: startsAt
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: endsAt
+          in: query
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Stylists matching filter
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Stylist'
+                required: [data]
+
+  /stylists/{stylistId}:
+    get:
+      tags: [Stylists]
+      summary: Get stylist profile detail
+      parameters:
+        - $ref: '#/components/parameters/StylistId'
+      responses:
+        '200':
+          description: Stylist profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stylist'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /availability:
+    get:
+      tags: [Availability]
+      summary: Get real-time available appointment slots
+      parameters:
+        - $ref: '#/components/parameters/BranchId'
+        - name: serviceIds
+          in: query
+          required: true
+          description: Comma-separated service IDs.
+          schema:
+            type: string
+        - name: from
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: stylistId
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Available slots
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timezone:
+                    type: string
+                    example: Africa/Kampala
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AvailabilitySlot'
+                required: [timezone, data]
+
+  /booking/quote:
+    post:
+      tags: [Booking]
+      summary: Quote selected services in UGX
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuoteRequest'
+      responses:
+        '200':
+          description: Pricing quote
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingQuote'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /booking/holds:
+    post:
+      tags: [Booking]
+      summary: Create a temporary booking hold for a time slot
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateHoldRequest'
+      responses:
+        '201':
+          description: Hold created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingHold'
+        '409':
+          description: Slot unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /booking/holds/{holdId}:
+    delete:
+      tags: [Booking]
+      summary: Release an active hold
+      parameters:
+        - $ref: '#/components/parameters/HoldId'
+      responses:
+        '204':
+          description: Hold released
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /appointments:
+    get:
+      tags: [Appointments]
+      summary: List current customer appointments and history
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [upcoming, completed, cancelled, all]
+            default: upcoming
+      responses:
+        '200':
+          description: Appointment list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Appointment'
+                required: [data]
+    post:
+      tags: [Booking]
+      summary: Confirm appointment from a hold
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAppointmentRequest'
+      responses:
+        '201':
+          description: Appointment confirmed or pending payment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        '409':
+          description: Hold expired or slot unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /appointments/{appointmentId}:
+    get:
+      tags: [Appointments]
+      summary: Get appointment detail
+      parameters:
+        - $ref: '#/components/parameters/AppointmentId'
+      responses:
+        '200':
+          description: Appointment detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /appointments/{appointmentId}/reschedule-requests:
+    post:
+      tags: [Appointments]
+      summary: Request appointment reschedule
+      parameters:
+        - $ref: '#/components/parameters/AppointmentId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRescheduleRequest'
+      responses:
+        '201':
+          description: Reschedule request created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RescheduleRequest'
+
+  /payments:
+    post:
+      tags: [Payments]
+      summary: Create payment for appointment deposit
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePaymentRequest'
+      responses:
+        '201':
+          description: Payment created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /payments/{paymentId}:
+    get:
+      tags: [Payments]
+      summary: Get payment status
+      parameters:
+        - $ref: '#/components/parameters/PaymentId'
+      responses:
+        '200':
+          description: Payment status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /appointments/{appointmentId}/review:
+    post:
+      tags: [Reviews]
+      summary: Submit post-appointment review
+      parameters:
+        - $ref: '#/components/parameters/AppointmentId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReviewRequest'
+      responses:
+        '201':
+          description: Review created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+        '409':
+          description: Review already exists or appointment not completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /messages/threads:
+    get:
+      tags: [Messages]
+      summary: List customer message threads
+      responses:
+        '200':
+          description: Threads
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/MessageThread'
+                required: [data]
+    post:
+      tags: [Messages]
+      summary: Start or reuse a thread with a stylist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateThreadRequest'
+      responses:
+        '201':
+          description: Thread created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageThread'
+
+  /messages/threads/{threadId}/messages:
+    get:
+      tags: [Messages]
+      summary: List messages in a thread
+      parameters:
+        - $ref: '#/components/parameters/ThreadId'
+      responses:
+        '200':
+          description: Messages
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+                required: [data]
+    post:
+      tags: [Messages]
+      summary: Send message to stylist or customer
+      parameters:
+        - $ref: '#/components/parameters/ThreadId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [body]
+              properties:
+                body:
+                  type: string
+                  minLength: 1
+                  maxLength: 2000
+      responses:
+        '201':
+          description: Message sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+
+  /customers/me:
+    get:
+      tags: [Customers]
+      summary: Get authenticated customer profile
+      responses:
+        '200':
+          description: Customer profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerProfile'
+    patch:
+      tags: [Customers]
+      summary: Update customer preferences
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCustomerProfileRequest'
+      responses:
+        '200':
+          description: Updated customer profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerProfile'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    BranchId:
+      name: branchId
+      in: query
+      schema:
+        type: string
+        format: uuid
+    StylistId:
+      name: stylistId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    HoldId:
+      name: holdId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    AppointmentId:
+      name: appointmentId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    PaymentId:
+      name: paymentId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    ThreadId:
+      name: threadId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: false
+      schema:
+        type: string
+        minLength: 8
+        maxLength: 128
+
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ValidationError:
+      description: Validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+    MoneyUGX:
+      type: integer
+      description: Whole Uganda shillings.
+      minimum: 0
+      example: 185000
+
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+          example: slot_unavailable
+        message:
+          type: string
+          example: The selected stylist is no longer available at this time.
+        details:
+          type: object
+          additionalProperties: true
+
+    Service:
+      type: object
+      required: [id, category, name, slug, durationMinutes, basePriceUgx, depositPriceUgx, isAddOn]
+      properties:
+        id:
+          type: string
+          format: uuid
+        category:
+          type: string
+          enum: [Braids, Dreadlocks, Perm, Hair dye]
+        name:
+          type: string
+          example: Braids installation
+        slug:
+          type: string
+          example: braids-installation
+        description:
+          type: string
+        durationMinutes:
+          type: integer
+          example: 135
+        basePriceUgx:
+          $ref: '#/components/schemas/MoneyUGX'
+        depositPriceUgx:
+          $ref: '#/components/schemas/MoneyUGX'
+        isAddOn:
+          type: boolean
+
+    Stylist:
+      type: object
+      required: [id, displayName, expertise, ratingAverage, ratingCount, isBookable, availability]
+      properties:
+        id:
+          type: string
+          format: uuid
+        displayName:
+          type: string
+          example: Amara Wells
+        bio:
+          type: string
+        expertise:
+          type: array
+          items:
+            type: string
+          example: [Braids, Hair dye]
+        ratingAverage:
+          type: number
+          format: float
+          example: 4.98
+        ratingCount:
+          type: integer
+          example: 312
+        isBookable:
+          type: boolean
+        availability:
+          type: object
+          required: [status]
+          properties:
+            status:
+              type: string
+              enum: [available, waitlist, unavailable]
+            nextAvailableAt:
+              type: string
+              format: date-time
+        portfolio:
+          type: array
+          items:
+            $ref: '#/components/schemas/PortfolioMedia'
+
+    PortfolioMedia:
+      type: object
+      required: [id, url, kind]
+      properties:
+        id:
+          type: string
+          format: uuid
+        url:
+          type: string
+          format: uri
+        kind:
+          type: string
+          enum: [image, video]
+        altText:
+          type: string
+
+    AvailabilitySlot:
+      type: object
+      required: [stylistId, startsAt, endsAt, status]
+      properties:
+        stylistId:
+          type: string
+          format: uuid
+        startsAt:
+          type: string
+          format: date-time
+        endsAt:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [available, held, waitlist]
+        holdExpiresAt:
+          type: string
+          format: date-time
+
+    QuoteRequest:
+      type: object
+      required: [serviceIds]
+      properties:
+        serviceIds:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            format: uuid
+        stylistId:
+          type: string
+          format: uuid
+        quietChair:
+          type: boolean
+          default: false
+
+    BookingQuote:
+      type: object
+      required: [lineItems, subtotalUgx, depositDueUgx, totalUgx, durationMinutes, currency]
+      properties:
+        currency:
+          type: string
+          const: UGX
+        lineItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuoteLineItem'
+        subtotalUgx:
+          $ref: '#/components/schemas/MoneyUGX'
+        depositDueUgx:
+          $ref: '#/components/schemas/MoneyUGX'
+        totalUgx:
+          $ref: '#/components/schemas/MoneyUGX'
+        durationMinutes:
+          type: integer
+          example: 205
+
+    QuoteLineItem:
+      type: object
+      required: [serviceId, name, durationMinutes, priceUgx]
+      properties:
+        serviceId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        durationMinutes:
+          type: integer
+        priceUgx:
+          $ref: '#/components/schemas/MoneyUGX'
+
+    CreateHoldRequest:
+      type: object
+      required: [customerId, branchId, stylistId, serviceIds, startsAt]
+      properties:
+        customerId:
+          type: string
+          format: uuid
+        branchId:
+          type: string
+          format: uuid
+        stylistId:
+          type: string
+          format: uuid
+        serviceIds:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            format: uuid
+        startsAt:
+          type: string
+          format: date-time
+        quietChair:
+          type: boolean
+          default: false
+        customerNotes:
+          type: string
+
+    BookingHold:
+      type: object
+      required: [id, status, startsAt, endsAt, expiresAt, quote]
+      properties:
+        id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [active, converted, expired, released]
+        startsAt:
+          type: string
+          format: date-time
+        endsAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time
+        quote:
+          $ref: '#/components/schemas/BookingQuote'
+
+    CreateAppointmentRequest:
+      type: object
+      required: [holdId, paymentProvider]
+      properties:
+        holdId:
+          type: string
+          format: uuid
+        paymentProvider:
+          type: string
+          enum: [mtn_mobile_money, airtel_money, bank_transfer, cash_at_salon]
+        mobileMoneyPhoneE164:
+          type: string
+          example: '+256771234567'
+
+    Appointment:
+      type: object
+      required: [id, status, customerId, stylist, branch, startsAt, endsAt, currency, totalUgx, depositDueUgx, services]
+      properties:
+        id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [draft, held, confirmed, completed, cancelled, no_show]
+        customerId:
+          type: string
+          format: uuid
+        stylist:
+          $ref: '#/components/schemas/StylistSummary'
+        branch:
+          $ref: '#/components/schemas/Branch'
+        startsAt:
+          type: string
+          format: date-time
+        endsAt:
+          type: string
+          format: date-time
+        currency:
+          type: string
+          const: UGX
+        totalUgx:
+          $ref: '#/components/schemas/MoneyUGX'
+        depositDueUgx:
+          $ref: '#/components/schemas/MoneyUGX'
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuoteLineItem'
+        quietChair:
+          type: boolean
+        customerNotes:
+          type: string
+
+    StylistSummary:
+      type: object
+      required: [id, displayName]
+      properties:
+        id:
+          type: string
+          format: uuid
+        displayName:
+          type: string
+
+    Branch:
+      type: object
+      required: [id, name, city, countryCode, timezone]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: Shakira Beauty and Welness Salon
+        city:
+          type: string
+          example: Kampala
+        countryCode:
+          type: string
+          const: UG
+        timezone:
+          type: string
+          example: Africa/Kampala
+
+    CreatePaymentRequest:
+      type: object
+      required: [appointmentId, provider, amountUgx]
+      properties:
+        appointmentId:
+          type: string
+          format: uuid
+        provider:
+          type: string
+          enum: [mtn_mobile_money, airtel_money, bank_transfer, cash_at_salon]
+        amountUgx:
+          $ref: '#/components/schemas/MoneyUGX'
+        phoneE164:
+          type: string
+          example: '+256771234567'
+
+    Payment:
+      type: object
+      required: [id, appointmentId, provider, status, amountUgx, currency]
+      properties:
+        id:
+          type: string
+          format: uuid
+        appointmentId:
+          type: string
+          format: uuid
+        provider:
+          type: string
+          enum: [mtn_mobile_money, airtel_money, bank_transfer, cash_at_salon]
+        status:
+          type: string
+          enum: [pending, requires_action, succeeded, failed, expired, refunded]
+        amountUgx:
+          $ref: '#/components/schemas/MoneyUGX'
+        currency:
+          type: string
+          const: UGX
+        providerReference:
+          type: string
+        expiresAt:
+          type: string
+          format: date-time
+
+    CreateRescheduleRequest:
+      type: object
+      required: [requestedStartsAt, requestedEndsAt]
+      properties:
+        requestedStartsAt:
+          type: string
+          format: date-time
+        requestedEndsAt:
+          type: string
+          format: date-time
+        reason:
+          type: string
+          maxLength: 1000
+
+    RescheduleRequest:
+      type: object
+      required: [id, appointmentId, status, requestedStartsAt, requestedEndsAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        appointmentId:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [requested, accepted, declined, cancelled]
+        requestedStartsAt:
+          type: string
+          format: date-time
+        requestedEndsAt:
+          type: string
+          format: date-time
+        reason:
+          type: string
+
+    CreateReviewRequest:
+      type: object
+      required: [rating]
+      properties:
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        comment:
+          type: string
+          maxLength: 2000
+        photoPermission:
+          type: boolean
+          default: false
+        isPublic:
+          type: boolean
+          default: false
+
+    Review:
+      type: object
+      required: [id, appointmentId, rating, createdAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        appointmentId:
+          type: string
+          format: uuid
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        comment:
+          type: string
+        photoPermission:
+          type: boolean
+        isPublic:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+
+    CreateThreadRequest:
+      type: object
+      required: [stylistId]
+      properties:
+        stylistId:
+          type: string
+          format: uuid
+        appointmentId:
+          type: string
+          format: uuid
+        subject:
+          type: string
+
+    MessageThread:
+      type: object
+      required: [id, customerId, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        customerId:
+          type: string
+          format: uuid
+        stylist:
+          $ref: '#/components/schemas/StylistSummary'
+        appointmentId:
+          type: string
+          format: uuid
+        subject:
+          type: string
+        unreadCount:
+          type: integer
+          minimum: 0
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Message:
+      type: object
+      required: [id, threadId, senderType, body, createdAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        threadId:
+          type: string
+          format: uuid
+        senderType:
+          type: string
+          enum: [customer, stylist, system]
+        body:
+          type: string
+        readAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+
+    CustomerProfile:
+      type: object
+      required: [id, fullName]
+      properties:
+        id:
+          type: string
+          format: uuid
+        fullName:
+          type: string
+        email:
+          type: string
+          format: email
+        phoneE164:
+          type: string
+        preferredPaymentProvider:
+          type: string
+          enum: [mtn_mobile_money, airtel_money, bank_transfer, cash_at_salon]
+        quietChairPreference:
+          type: boolean
+        hairNotes:
+          type: string
+        allergyNotes:
+          type: string
+
+    UpdateCustomerProfileRequest:
+      type: object
+      properties:
+        fullName:
+          type: string
+        email:
+          type: string
+          format: email
+        phoneE164:
+          type: string
+        preferredPaymentProvider:
+          type: string
+          enum: [mtn_mobile_money, airtel_money, bank_transfer, cash_at_salon]
+        quietChairPreference:
+          type: boolean
+        hairNotes:
+          type: string
+        allergyNotes:
+          type: string

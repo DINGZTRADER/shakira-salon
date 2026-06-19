@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(node -e \"for\\(const p of ['next','@supabase/ssr','@supabase/supabase-js']\\){console.log\\(p, require\\(p+'/package.json'\\).version\\)}\")",
+      "Bash(npm view *)"
+    ]
+  }
+}
