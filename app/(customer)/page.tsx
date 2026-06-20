@@ -100,32 +100,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Immersive Video Promo Section */}
-      <section className="bg-brand-50/50 py-16">
-        <div className="mx-auto max-w-6xl px-4 grid gap-8 md:grid-cols-2 items-center">
-          <div className="space-y-6">
-            <h2 className="text-3xl font-extrabold text-ink tracking-tight">Watch Our Stylists in Action</h2>
-            <p className="text-base text-ink-light leading-relaxed">
-              We design braids, locks, and color gradients tailored to bring out your natural shine. Watch our walkthrough to see client transformations and salon vibes.
-            </p>
-            <div className="flex items-center gap-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-100 text-brand-600">
-                <Play className="h-5 w-5 fill-brand-600" />
-              </div>
-              <span className="text-sm font-semibold text-ink">Explore hair dye & perm sets</span>
-            </div>
-          </div>
-          
-          <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl border border-brand-100 bg-black">
-            <video
-              src="/shakira_promo.mp4"
-              controls
-              poster="/shakira.png"
-              className="h-full w-full object-cover"
-            />
-          </div>
-        </div>
-      </section>
 
       {/* Video & Media Gallery Section */}
       <section className="bg-white py-16 border-t border-brand-100">
@@ -182,7 +156,7 @@ export default async function HomePage() {
             {/* Gallery Item 3 */}
             <div className="group relative rounded-2xl overflow-hidden shadow-md border border-brand-100 bg-black aspect-[4/5] flex flex-col justify-end">
               <video
-                src="/dance_demo.mp4"
+                src="/welcoming_4.mp4"
                 autoPlay
                 loop
                 muted
