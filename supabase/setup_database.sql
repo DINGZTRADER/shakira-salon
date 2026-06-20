@@ -443,7 +443,7 @@ CREATE POLICY "messages_all_admin" ON public.social_messages FOR ALL USING (publ
 
 -- Seed Kampala main branch
 INSERT INTO public.branches (name, slug, address_line_1, city, country_code, timezone, phone_e164)
-VALUES ('Shakira Beauty & Wellness Salon', 'kampala-main', 'Kampala Road', 'Kampala', 'UG', 'Africa/Kampala', '+256700123456')
+VALUES ('Shakira Beauty & Wellness Salon', 'kampala-main', 'Kampala Road', 'Kampala', 'UG', 'Africa/Kampala', '+256757211637')
 ON CONFLICT (slug) DO NOTHING;
 
 -- Seed service categories

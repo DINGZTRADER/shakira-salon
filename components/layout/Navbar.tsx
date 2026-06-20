@@ -22,7 +22,7 @@ export function Navbar() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <span className="text-lg font-bold text-brand-700 sm:text-xl">
-            Sakira
+            Shakira
           </span>
           <span className="hidden text-sm text-ink-light sm:inline">
             Beauty &amp; Hair

@@ -10,7 +10,7 @@ interface WhatsAppButtonProps {
 }
 
 export function WhatsAppButton({
-  message = "Hello Sakira, I'd like to make an enquiry.",
+  message = "Hello Shakira, I'd like to make an enquiry.",
   variant = "floating",
   className,
 }: WhatsAppButtonProps) {

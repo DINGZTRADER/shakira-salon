@@ -33,24 +33,58 @@ export function SlotPicker({
   const allSlots = generateTimeSlots(date);
 
   const loadBooked = useCallback(async () => {
-    if (!staffId || !date) {
+    if (!date) {
       setBookedTimes([]);
       return;
     }
     setLoading(true);
-    let query = supabase
-      .from("appointments")
-      .select("appointment_time, id, status")
-      .eq("staff_id", staffId)
-      .eq("appointment_date", date)
-      .neq("status", "cancelled");
+    try {
+      if (staffId) {
+        const { data } = await supabase
+          .from("appointments")
+          .select("appointment_time, id, status")
+          .eq("stylist_id", staffId)
+          .eq("appointment_date", date)
+          .neq("status", "cancelled");
+        const taken = (data ?? [])
+          .filter((a) => a.id !== excludeAppointmentId)
+          .map((a) => (a.appointment_time as string).slice(0, 5)); // HH:MM
+        setBookedTimes(taken);
+      } else {
+        // If staffId is null, check if a slot is booked by ALL active stylists
+        const { data: stylists } = await supabase
+          .from("stylist_profiles")
+          .select("user_id")
+          .eq("is_bookable", true);
+        
+        const totalStylistsCount = stylists?.length || 3; // Default fallback to 3 stylists
 
-    const { data } = await query;
-    const taken = (data ?? [])
-      .filter((a) => a.id !== excludeAppointmentId)
-      .map((a) => (a.appointment_time as string).slice(0, 5)); // HH:MM
-    setBookedTimes(taken);
-    setLoading(false);
+        const { data: appointments } = await supabase
+          .from("appointments")
+          .select("appointment_time, stylist_id, id, status")
+          .eq("appointment_date", date)
+          .neq("status", "cancelled");
+
+        const validAppts = (appointments ?? []).filter((a) => a.id !== excludeAppointmentId);
+        
+        // Group appointments by time slot (HH:MM)
+        const countsByTime: Record<string, number> = {};
+        validAppts.forEach((a) => {
+          const t = (a.appointment_time as string).slice(0, 5);
+          countsByTime[t] = (countsByTime[t] || 0) + 1;
+        });
+
+        // A slot is taken only if the number of appointments at that time equals or exceeds total bookable stylists
+        const taken = Object.keys(countsByTime).filter(
+          (t) => countsByTime[t] >= totalStylistsCount
+        );
+        setBookedTimes(taken);
+      }
+    } catch (err) {
+      console.error("Failed to load booked slots:", err);
+    } finally {
+      setLoading(false);
+    }
   }, [supabase, staffId, date, excludeAppointmentId]);
 
   useEffect(() => {
@@ -98,25 +132,19 @@ export function SlotPicker({
           Select Time
         </label>
 
-        {!staffId && (
-          <p className="text-sm text-amber-600">
-            Please choose a staff member first to see available times.
-          </p>
-        )}
-
-        {staffId && loading && (
+        {loading && (
           <div className="flex items-center gap-2 text-sm text-ink-light">
             <Spinner className="h-4 w-4 text-brand-500" /> Loading availability…
           </div>
         )}
 
-        {staffId && !loading && allSlots.length === 0 && (
+        {!loading && allSlots.length === 0 && (
           <p className="text-sm text-ink-light">
             No available times for this date.
           </p>
         )}
 
-        {staffId && !loading && allSlots.length > 0 && (
+        {!loading && allSlots.length > 0 && (
           <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
             {allSlots.map((slot) => {
               const taken = bookedTimes.includes(slot);

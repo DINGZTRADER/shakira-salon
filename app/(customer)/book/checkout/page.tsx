@@ -104,7 +104,7 @@ function CheckoutStep() {
         provider: paymentMethod,
         status: "pending",
         amount_ugx: deposit,
-        phone_e164: phoneNumber || "+256700123456",
+        phone_e164: phoneNumber || "+256757211637",
         provider_reference: providerRef,
       });
 

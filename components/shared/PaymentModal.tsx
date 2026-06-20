@@ -129,7 +129,7 @@ export function PaymentModal({
           type="tel"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          placeholder="+256700123456"
+          placeholder="+256757211637"
           required
         />
 

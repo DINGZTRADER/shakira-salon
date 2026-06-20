@@ -8,7 +8,7 @@ export const revalidate = 60;
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "Browse hair braiding, treatments, coloring, manicures, pedicures, facials and makeup services at Sakira Beauty & Hair Salon, Kampala.",
+    "Browse hair braiding, treatments, coloring, manicures, pedicures, facials and makeup services at Shakira Beauty & Hair Salon, Kampala.",
 };
 
 export default async function ServicesPage() {

@@ -96,7 +96,7 @@ export default function AdminSocialDashboard() {
       provider: "mtn_mobile_money",
       status: "pending",
       amount_ugx: active.appointment.deposit_due_ugx || 62000,
-      phone_e164: active.customer?.phone || "+256700123456",
+      phone_e164: active.customer?.phone || "+256757211637",
       provider_reference: providerRef,
     });
 

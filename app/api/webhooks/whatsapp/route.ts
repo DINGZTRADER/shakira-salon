@@ -25,7 +25,7 @@ export async function POST(request: Request) {
   const change = entry?.changes?.[0];
   const value = change?.value;
   const message = value?.messages?.[0];
-  const senderPhone = message?.from || value?.contacts?.[0]?.wa_id || "+256700123456";
+  const senderPhone = message?.from || value?.contacts?.[0]?.wa_id || "+256757211637";
   const messageText = message?.text?.body || message?.button?.text || "";
 
   if (!messageText) {
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
           branch_id: branch.id,
           channel: "whatsapp" as SocialChannel,
           display_name: "Shakira Salon",
-          handle: "+256700123456",
+          handle: "+256757211637",
           is_active: true,
         })
         .select()

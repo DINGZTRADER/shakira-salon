@@ -4,8 +4,8 @@
 
 export const SALON = {
   name: process.env.NEXT_PUBLIC_SALON_NAME ?? "Sakira Beauty & Hair Salon",
-  phone: process.env.NEXT_PUBLIC_SALON_PHONE ?? "+256700123456",
-  whatsapp: process.env.NEXT_PUBLIC_SALON_WHATSAPP ?? "+256700123456",
+  phone: process.env.NEXT_PUBLIC_SALON_PHONE ?? "+256 757 211637",
+  whatsapp: process.env.NEXT_PUBLIC_SALON_WHATSAPP ?? "+256 757 211637",
   instagram: process.env.NEXT_PUBLIC_SALON_INSTAGRAM ?? "sakirabeautyug",
   location:
     process.env.NEXT_PUBLIC_SALON_LOCATION ?? "Kampala Road, Kampala, Uganda",

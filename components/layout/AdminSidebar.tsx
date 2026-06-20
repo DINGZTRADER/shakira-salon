@@ -59,7 +59,7 @@ export function AdminSidebar() {
       {/* Mobile top bar */}
       <div className="flex items-center justify-between border-b border-ink-light bg-ink px-4 py-3 lg:hidden">
         <Link href="/admin" className="font-bold text-white">
-          Sakira Admin
+          Shakira Admin
         </Link>
         <button
           onClick={() => setOpen(true)}
@@ -73,7 +73,7 @@ export function AdminSidebar() {
       {/* Desktop sidebar */}
       <aside className="hidden w-64 shrink-0 flex-col bg-ink p-4 lg:flex">
         <Link href="/admin" className="mb-6 px-3 text-xl font-bold text-white">
-          Sakira Admin
+          Shakira Admin
         </Link>
         <NavItems />
         <div className="mt-auto space-y-2 pt-6">
@@ -102,7 +102,7 @@ export function AdminSidebar() {
           />
           <div className="absolute left-0 top-0 flex h-full w-64 flex-col bg-ink p-4">
             <div className="mb-6 flex items-center justify-between">
-              <span className="text-xl font-bold text-white">Sakira Admin</span>
+              <span className="text-xl font-bold text-white">Shakira Admin</span>
               <button
                 onClick={() => setOpen(false)}
                 aria-label="Close menu"
