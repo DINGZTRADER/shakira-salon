@@ -198,25 +198,7 @@ export default async function HomePage() {
             </div>
 
             {/* Gallery Item 4 */}
-            <div className="group relative rounded-2xl overflow-hidden shadow-md border border-brand-100 bg-black aspect-video sm:col-span-2 flex flex-col justify-end">
-              <video
-                src="/shakira_podcast.mp4"
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="absolute inset-0 h-full w-full object-cover opacity-75 group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
-              <div className="relative p-6 z-10 text-white">
-                <span className="text-[10px] font-bold tracking-wider uppercase text-brand-400">Spotlight Podcast</span>
-                <h3 className="text-xl font-bold mt-1">Behind the Magic with Shakira</h3>
-                <p className="text-xs text-brand-200 mt-1 leading-relaxed">Shakira shares her journey, styling secrets, and beauty philosophy.</p>
-              </div>
-            </div>
-
-            {/* Gallery Item 5 */}
-            <div className="group relative rounded-2xl overflow-hidden shadow-md border border-brand-100 bg-black aspect-video flex flex-col justify-end">
+            <div className="group relative rounded-2xl overflow-hidden shadow-md border border-brand-100 bg-black aspect-video sm:col-span-2 lg:col-span-3 flex flex-col justify-end">
               <img
                 src="/behind_the_scenes.jpeg"
                 alt="Behind the scenes at salon"
